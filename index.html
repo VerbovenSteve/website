@@ -1,109 +1,67 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastAPI CRUD Operations</title>
-    <script defer src="https://unpkg.com/alpinejs@2.8.2/dist/alpine.min.js"></script>
+    <title>FastAPI Frontend</title>
 </head>
-<body x-data="{
-    films: null,
-    newFilmTitle: '',
-    selectedFilmId: null,
-    updatedFilmTitle: ''
-}">
-    <div>
-        <h1>Films</h1>
+<body>
 
-        <div x-show="films === null">Loading films...</div>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="button" onclick="login()">Login</button>
+    </form>
 
-        <template x-if="films !== null">
-            <div x-for="film in films" :key="film.film_id">
-                <h2 x-text="film.title"></h2>
-                <p>Release Year: <span x-text="film.release_year"></span></p>
-
-                <button x-on:click="editFilm(film.film_id)">Edit</button>
-                <button x-on:click="deleteFilm(film.film_id)">Delete</button>
-
-                <div x-show="selectedFilmId === film.film_id">
-                    <input type="text" x-model="updatedFilmTitle">
-                    <button x-on:click="updateFilm(film.film_id)">Update</button>
-                </div>
-            </div>
-        </template>
-
-        <div>
-            <h2>Create New Film</h2>
-            <input type="text" x-model="newFilmTitle">
-            <button x-on:click="createFilm">Create</button>
-        </div>
-    </div>
+    <h1>Create User</h1>
+    <form id="createUserForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="passwordCreate" name="password" required>
+        <br>
+        <button type="button" onclick="createUser()">Create User</button>
+    </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('https://star-wars-api-verbovensteve.cloud.okteto.net/films/all_with_characters_starships')
-                .then(response => response.json())
-                .then(data => {
-                    Alpine.data['x-data'].films = data;
-                });
-        });
-
-        Alpine.data['x-data'].createFilm = function () {
-            const newFilmTitle = this.newFilmTitle.trim();
-
-            if (newFilmTitle !== '') {
-                fetch('https://star-wars-api-verbovensteve.cloud.okteto.net/films', {
+        async function login() {
+            const form = document.getElementById("loginForm");
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('https://star-wars-api-verbovensteve.cloud.okteto.net//token', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ title: newFilmTitle }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    this.films.push(data);
-                    this.newFilmTitle = '';
+                    body: formData
                 });
+
+                const data = await response.json();
+                console.log('Access Token:', data.access_token);
+            } catch (error) {
+                console.error('Error:', error);
             }
-        };
+        }
 
-        Alpine.data['x-data'].editFilm = function (filmId) {
-            this.selectedFilmId = filmId;
-            const film = this.films.find(f => f.film_id === filmId);
-            this.updatedFilmTitle = film.title;
-        };
-
-        Alpine.data['x-data'].updateFilm = function (filmId) {
-            const updatedFilmTitle = this.updatedFilmTitle.trim();
-
-            if (updatedFilmTitle !== '') {
-                fetch(`https://star-wars-api-verbovensteve.cloud.okteto.net/films/${filmId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ title: updatedFilmTitle }),
-                })
-                .then(() => {
-                    const filmIndex = this.films.findIndex(f => f.film_id === filmId);
-                    this.films[filmIndex].title = updatedFilmTitle;
-                    this.selectedFilmId = null;
+        async function createUser() {
+            const form = document.getElementById("createUserForm");
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('https://star-wars-api-verbovensteve.cloud.okteto.net/users/', {
+                    method: 'POST',
+                    body: formData
                 });
-            }
-        };
 
-        Alpine.data['x-data'].deleteFilm = function (filmId) {
-            const confirmDelete = confirm('Are you sure you want to delete this film?');
-
-            if (confirmDelete) {
-                fetch(`https://star-wars-api-verbovensteve.cloud.okteto.net/films/${filmId}`, {
-                    method: 'DELETE',
-                })
-                .then(() => {
-                    this.films = this.films.filter(f => f.film_id !== filmId);
-                });
+                const data = await response.json();
+                console.log('New User:', data);
+            } catch (error) {
+                console.error('Error:', error);
             }
-        };
+        }
     </script>
 </body>
 </html>
