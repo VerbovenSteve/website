@@ -63,7 +63,7 @@ async function createUser() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(userData)
+                    body: JSON.stringify({ user: userData })  // Wrap the user data in an object
                 });
 
                 if (!response.ok) {
