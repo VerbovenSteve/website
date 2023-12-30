@@ -3,9 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FastAPI Frontend</title>
 </head>
 <body>
-    <h1>TEST</h1>
+
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="button" onclick="login()">Login</button>
+    </form>
+
+    <h1>Create User</h1>
+    <form id="createUserForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="passwordCreate" name="password" required>
+        <br>
+        <button type="button" onclick="createUser()">Create User</button>
+    </form>
+
+    <script>
+        async function login() {
+            const form = document.getElementById("loginForm");
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('http://localhost:8000/token', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log('Access Token:', data.access_token);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function createUser() {
+            const form = document.getElementById("createUserForm");
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('http://localhost:8000/users/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log('New User:', data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
 </body>
 </html>
