@@ -62,11 +62,12 @@
                 console.error('Error:', error);
             }
         }
-         <h1>List of Films</h1>
+        </script>
+    <h1>List of Films</h1>
     <button onclick="getFilms()">Get Films</button>
     <div id="filmsList"></div>
 
-    
+    <script>
         const apiUrl = 'https://star-wars-api-verbovensteve.cloud.okteto.net/films';
 
         async function getFilms() {
