@@ -48,12 +48,12 @@
 
         const apiUrltest = 'https://star-wars-api-verbovensteve.cloud.okteto.net/users/';
 
-        async function createUser() {
+       async function createUser() {
             const form = document.getElementById("createUserForm");
             const formData = new FormData(form);
 
             try {
-                const response = await fetch(apiUrltest, {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     body: formData
                 });
@@ -61,7 +61,7 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Error:', errorData);
-                    alert(`Error: ${errorData.detail}`);
+                    alert(`Error: ${JSON.stringify(errorData)}`);
                     return;
                 }
 
