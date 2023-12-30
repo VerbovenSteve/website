@@ -49,28 +49,36 @@
         const apiUrltest = 'https://star-wars-api-verbovensteve.cloud.okteto.net/users/';
 
        async function createUser() {
-            const form = document.getElementById("createUserForm");
-            const formData = new FormData(form);
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("passwordCreate").value;
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    body: formData
-                });
+        const userData = {
+            email: email,
+            password: password
+        };
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error:', errorData);
-                    alert(`Error: ${JSON.stringify(errorData)}`);
-                    return;
-                }
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
 
-                const data = await response.json();
-                console.log('New User:', data);
-            } catch (error) {
-                console.error('Error:', error);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error:', errorData);
+                alert(`Error: ${JSON.stringify(errorData)}`);
+                return;
             }
+
+            const data = await response.json();
+            console.log('New User:', data);
+        } catch (error) {
+            console.error('Error:', error);
         }
+    }
         </script>
     <h1>List of Films</h1>
     <button onclick="getFilms()">Get Films</button>
