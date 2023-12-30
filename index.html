@@ -62,6 +62,45 @@
                 console.error('Error:', error);
             }
         }
+         <h1>List of Films</h1>
+    <button onclick="getFilms()">Get Films</button>
+    <div id="filmsList"></div>
+
+    
+        const apiUrl = 'https://star-wars-api-verbovensteve.cloud.okteto.net/films';
+
+        async function getFilms() {
+            try {
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+                    console.error('Error or non-JSON response:', response);
+                    return;
+                }
+
+                const data = await response.json();
+                displayFilms(data.films);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayFilms(films) {
+            const filmsListDiv = document.getElementById('filmsList');
+            filmsListDiv.innerHTML = '';
+
+            if (films && films.length > 0) {
+                const ul = document.createElement('ul');
+                films.forEach(film => {
+                    const li = document.createElement('li');
+                    li.textContent = `${film.title} (${film.release_year})`;
+                    ul.appendChild(li);
+                });
+                filmsListDiv.appendChild(ul);
+            } else {
+                filmsListDiv.textContent = 'No films found.';
+            }
+        }
     </script>
 </body>
 </html>
