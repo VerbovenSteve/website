@@ -46,15 +46,24 @@
             }
         }
 
+        const apiUrl = 'https://star-wars-api-verbovensteve.cloud.okteto.net/users/';
+
         async function createUser() {
             const form = document.getElementById("createUserForm");
             const formData = new FormData(form);
-            
+
             try {
-                const response = await fetch('https://star-wars-api-verbovensteve.cloud.okteto.net/users/', {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     body: formData
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData);
+                    alert(`Error: ${errorData.detail}`);
+                    return;
+                }
 
                 const data = await response.json();
                 console.log('New User:', data);
