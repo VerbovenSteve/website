@@ -35,7 +35,7 @@
             const formData = new FormData(form);
             
             try {
-                const response = await fetch('http://localhost:8000/token', {
+                const response = await fetch('useritem-api-service-verbovensteve.cloud.okteto.net/token', {
                     method: 'POST',
                     body: formData
                 });
